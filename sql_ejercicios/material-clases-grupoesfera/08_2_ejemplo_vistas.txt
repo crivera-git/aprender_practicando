@@ -1,0 +1,23 @@
+USE AlarmaSys;
+
+DROP VIEW if EXISTS VistaEmpleados;
+
+CREATE VIEW VistaEmpleados AS SELECT e.nombre, e.apellido, e.fechaContratacion 
+FROM Empleado e;
+
+DROP VIEW if EXISTS JefePorSucursal;
+
+CREATE VIEW JefePorSucursal AS SELECT e.nombre, e.apellido, s.nombre as nombreSucursal 
+FROM Empleado e 
+INNER JOIN Sucursal s ON (e.idSucursal = s.id)
+WHERE e.idJefe IS NULL;
+
+mysql> SELECT * FROM JefePorSucursal;
+	+-----------+----------+-------------------------------+
+	| nombre    | apellido | nombreSucursal                |
+	+-----------+----------+-------------------------------+
+	| Penélope  | Castro   | La Tablada                    |
+	| Elvira    | Valverde | Don Torcuato                  |
+	| Yolanda   | Vazquez  | Lanus Oeste                   |
+	| Federico  | Genovese | Base Verificadora Berasategui |
+	+-----------+----------+-------------------------------+

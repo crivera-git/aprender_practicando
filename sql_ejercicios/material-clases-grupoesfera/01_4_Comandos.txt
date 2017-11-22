@@ -1,0 +1,88 @@
+Para ingresar en desde el cliente de la linea de comando al MySQL:
+==================================================================
+
+Ingresar en una terminal y escribir:
+
+	$ mysql -uroot -p
+
+Verificar las bases de datos existentes en el MySQL:
+
+	show databases;
+
+
+Para ejecutar un script:
+========================
+
+	mysql> source <ruta_completa_de_archivo>;
+	
+	
+Ejemplo:
+
+	mysql> source /home/nombreUsuario/cursoSQL/MATERIAL_ALUMNO/01_3_Schema_MySQL_SistemaAlarmas.sql
+
+
+
+Para trabajr con una base de datos específica usar el comando "use":
+
+	use <Nombre de Base de datos>;
+
+Ejemplo:
+
+	use AlarmaSys;
+
+
+Para ver las tablas de la base de datos actual:
+
+	show tables;
+
+
+Para ver la estructura de una tabla:
+
+	describe <nombre de tabla>
+
+
+/* La cláusala REGEXP se puede usar en MySQL para patrones */
+
+Extraído de la documentación:
+
+Algunas características de las expresiones regulares extendidas:
+
+	- '.' detecta coincidencia con cualquier carácter individual.
+
+	- Una clase de carácter '[...]' detecta coincidencia con cualquier carácter entre los corchetes. Por
+	ejemplo, '[abc]' coincidirá con 'a', 'b', o 'c'. Para hacer referencia a un rango de caracteres, use un
+	guión. '[a-z]' detecta coincidencia con cualquier letra, mientras que '[0-9]' lo hace con cualquier
+	dígito.
+
+	- '*' detecta coincidencia con cero o más apariciones de los caracteres que lo preceden. Por ejemplo,
+	'x*' detecta cualquier número de caracteres 'x', '[0-9]*' detecta cualquier cantidad de dígitos, y '.*'
+	coincidirá con cualquier número de cualquier carácter.
+
+	- REGEXP tendrá éxito si el patrón suministrado encuentra coincidencia en cualquier parte del valor
+	examinado (esto difiere de LIKE en que este último solo tiene éxito si el patrón concuerda con todo el
+	valor).
+
+	- Para lograr que un patrón detecte coincidencias solamente al principio o al final del valor examinado,
+	utilice '^' al principio o '$' al final del patrón.
+	Para demostrar el funcionamiento de las expresiones regulares extendidas, las consultas con LIKE
+	expuestas anteriormente se han reescrito utilizando REGEXP.
+
+Para hallar nombres que comiencen con 'b', use '^' para buscar coincidencia al principio del valor:
+
+	mysql> SELECT * FROM pet WHERE name REGEXP '^b';
+
+ Para hallar nombres que comiencen (el ^ se usa para comienzo de linea) con
+una sola 'v' y terminen (el $ se usa para fin de linea) con con una sola 'a'
+
+	mysql> SELECT * FROM Cliente WHERE nombre REGEXP '^v{1}.*a{1}$';
+
+
+
+Para instalar el MySQL en Linux:
+
+	sudo apt-get remove --purge *mysql\*
+	sudo apt-get autoremove
+	sudo apt-get autoclean
+	sudo pat-get install mysql-server <TAB 2 VECES y seleccionar el que no tiene número de versión>
+
+

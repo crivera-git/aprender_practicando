@@ -1,0 +1,9 @@
+
+/* Cuidado: Para verificar nulidad en un campo se usa el 'is' o el 'is not', sin embargo, el '=' permite usarlo en una query */
+select * from Empleado where Empleado.idJefe is null
+
+/* La siguiente query no devuelve nada */
+select * from Empleado where Empleado.idJefe = null
+
+/* Advertir que la siguiente query no devuelve todos los empleados, solo devuelve los que tienen idJefe distintos de null*/
+select * from Empleado where Empleado.idJefe >= 7 or 7 > Empleado.idJefe

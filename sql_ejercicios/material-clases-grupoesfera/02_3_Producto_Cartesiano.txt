@@ -1,0 +1,46 @@
+Producto Cartesiano:
+====================
+
+Definición: Es una operación que se realiza sobre 2 conjuntos, esta operación
+		devuelve un nuevo conjunto que tiene todos los pares ordenados
+		entre los 2 conjuntos originales.
+
+Ejemplo:
+
+Dados los siguientes conjuntos:
+
+	Autos = { Fiat , Honda }
+	
+	Colores = { Rojo , Gris , Azul , Negro}
+
+
+El producto cartesiano entre "Autos" y "Colores" es:
+
+	AC = { (Fiat,Rojo) , (Fiat,Gris) , (Fiat,Azul) , (Fiat,Negro) , 
+		(Honda,Rojo) , (Honda,Gris) , (Honda,Azul) , (Honda,Negro) }
+
+Observaciones:
+
+	(1) El producto cartesiano no se aplica solamente a conjuntos de números.
+	
+	(2) La cantidad de elementos del producto cartesiano es la cantidad
+		de elementos del primer conjunto multiplicada por la cantidad
+		de elementos del segundo conjunto.
+
+	(3) "En el producto cartesiano se puede encontrar cualquier tipo
+		de información que esté vinculada a los conjuntos originales".
+
+		Cualquier búsqueda o selección de información vinculada a los Autos
+		y a los Colores siempre se puede encontrar en el producto 
+		cartesiano, por ejemplo, Si se sabe que la empresa Honda solo
+		fabrica autos Negros y Grises entonces se debe hacer una
+		selección de los pares que pertenecen a AC para obtener
+		un listado real de los autos fabricados por la empresa en Cuestión.
+
+	(4) El resultado del producto cartesiano es otro conjunto, por lo tanto se
+		puede volver a realizar un nuevo producto cartesiano entre AC y, 
+		por ejemplo, el conjunto de Clientes que prefieren autos azules
+		(Autos x Clientes x Colores). 
+
+
+

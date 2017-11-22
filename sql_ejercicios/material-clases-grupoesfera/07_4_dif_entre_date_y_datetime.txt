@@ -1,0 +1,23 @@
+En MySQL:
+=========
+
+Extraído de la documentación:
+_____________________________
+
+El tipo DATETIME se usa cuando necesita valores que contienen información de fecha y hora. MySQL
+recibe y muestra los valores DATETIME en formato 'YYYY-MM-DD HH:MM:SS' . El rango soportado es
+de '1000-01-01 00:00:00' a '9999-12-31 23:59:59'. (“Soportado” significa que aunque valores
+anteriores pueden funcionar, no hay garantías)
+
+El tipo DATE se usa cuando necesita sólo un valor de fecha, sin una parte de hora. MySQL recibe y
+muestra los valores DATE en formato 'YYYY-MM-DD' . El rango soportado es de '1000-01-01' a
+'9999-12-31'.
+
+
+Tipo de Columna “Cero” Valor
+
+DATETIME	'0000-00-00 00:00:00'
+DATE 		'0000-00-00'
+TIMESTAMP	00000000000000
+TIME 		'00:00:00'
+YEAR 		0000

@@ -1,0 +1,10 @@
+use Cocina;
+
+insert into Ingrediente (id,nombre) values (7, 'Manzana Roja');
+
+insert into Receta (id,nombre,cantidadPorciones) values (4, 'Tarta de Manzana',1)
+
+insert into RecetaIngrediente (RecetaIngrediente.idReceta, RecetaIngrediente.idIngrediente, RecetaIngrediente.cantidad, RecetaIngrediente.unidad) values ((select id from Receta where Receta.nombre ='Tarta de Manzana'), (select id from Ingrediente where Ingrediente.nombre ='Manzana Roja'),3,'unidad');
+insert into RecetaIngrediente (RecetaIngrediente.idReceta, RecetaIngrediente.idIngrediente, RecetaIngrediente.cantidad, RecetaIngrediente.unidad) values ((select id from Receta where Receta.nombre ='Tarta de Manzana'), (select id from Ingrediente where Ingrediente.nombre ='Leche Entera'),250,'mili litro');
+insert into RecetaIngrediente (RecetaIngrediente.idReceta, RecetaIngrediente.idIngrediente, RecetaIngrediente.cantidad, RecetaIngrediente.unidad) values ((select id from Receta where Receta.nombre ='Tarta de Manzana'), (select id from Ingrediente where Ingrediente.nombre ='Azucar Blanco'),200,'gramos');
+/* Falta Harina(200g), Levadura(50g) y Huevos(4)*/

@@ -1,0 +1,8 @@
+# Me muestra todas las tablas en la base de datos actual.
+show tables;
+
+# Me da información adicional sobre la tabla.
+describe ______(una tabla);
+
+# Explica como es que se va a ejecutar una consulta.
+explain ______(una consulta);

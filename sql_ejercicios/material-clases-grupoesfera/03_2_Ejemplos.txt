@@ -1,0 +1,44 @@
+/* Los nombres de las funciones de fecha coinciden entre MySQL y MSSQL*/
+select DAY(Factura.fecha) as dia, DAYOFMONTH(Factura.fecha) as diaDelMes, MONTH (Factura.fecha) as mes, YEAR(Factura.fecha) as anio from Factura;
+
+/* GETDATE() Se usa en MSSQL, en MySQL se usa CURDATE(), esta devuelve la fecha actual (no incluye la hora) */
+/* CURTIME(), devuelve la hora actual (no incluye la fecha) */
+/* NOW(), devuelve la fecha actual y la hora */
+
+/* Ejemplos: */
+select CURDATE(), CURTIME(), NOW();
+select * from Factura where fecha < now();
+
+/* DATEADD() Se usa en MSSQL, en MySQL se usa DATE_ADD*/ 
+
+SELECT DATE_ADD('1998-01-02', INTERVAL 6 DAY);/*RESULTADO: 1998-01-08*/
+SELECT DATE_ADD('1998-01-02', INTERVAL 3 MONTH);/*RESULTADO: 1998-04-02*/
+
+/* Los nombres de las funciones matemáticas coninciden en MySQL y en MSSQL*/
+SELECT ABS(-1), ABS(1), ROUND(1001.99,2), ROUND(1001.99,1),FLOOR(5000),FLOOR(4999.99), POWER(2,8);
+
+select concat('hola,',' ','como se sienten,',' espero que bien' );
+select left('conocer',3 );
+select LENGTH('hola');
+select * from Factura LIMIT 5;
+
+/* Count, cuenta la cantidad de registros de la tabla Empleado*/
+select count(*) from Empleado; /*DEVUELVE: 15*/
+
+/* Cuando se especifica la columna en el argumento del count cuenta los que son distinto de NULL*/
+select count(Empleado.id)  from Empleado; /*DEVUELVE: 15*/ 
+select count(Empleado.idJefe)  from Empleado; /*DEVUELVE: 11*/ 
+
+/* year (y otras funciones de fecha) se pueden usar tanto en las condiciones como en las columnas a seleccionar*/
+select year(fecha) from Factura where year(fecha) between '2004' AND '2016'; 
+
+/* Sin embargo, las funciones de agregación no se pueden usar en el where (no tiene sentido) */
+SELECT SUM(montoTotal) FROM Factura;
+
+/* Para devolver el monto mayor de todas las facturas */
+select Max(Factura.montoTotal) from Factura;
+
+/* Se puede convinar el uso de funciones propietarias con funciones de agregación*/
+select Max(year(fecha)) from Factura where year(fecha) between '2004' AND '2017'; /* DEVUELVE 2012 */ 
+select Min(year(fecha)) from Factura where year(fecha) between '2004' AND '2017'; /* DEVUELVE 2006 */ 
+

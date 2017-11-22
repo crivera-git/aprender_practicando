@@ -34,7 +34,7 @@ E35: Obtener el nombre de los clienes que se repite.
 select Cliente.nombre from Cliente group by Cliente.nombre
   having count(Cliente.nombre) > 1;
 
-/*Preguntar*/E36: Obtener el nombre del producto más vendido junto con la cantidad
+E36: Obtener el nombre del producto más vendido junto con la cantidad
 de unidades vendidas.
 
 select Producto.nombre, sum(FacturaProducto.cantidad)
@@ -42,3 +42,9 @@ select Producto.nombre, sum(FacturaProducto.cantidad)
   where Producto.id = FacturaProducto.idProducto
   and Factura.id = FacturaProducto.idFactura
   group by FacturaProducto.idProducto order by condicion desc limit 1;
+
+/* Completar */ E37: Obtener la sucursal que vendió mayor cantidad de productos.
+
+select FacturaProducto.idFactura, sum(FacturaProducto.cantidad)
+  from FacturaProducto group by FacturaProducto.idFactura
+  order by sum(FacturaProducto.cantidad) asc limit 1;

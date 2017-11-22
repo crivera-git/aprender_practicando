@@ -1,0 +1,38 @@
+/* UNION */
+select nombre from Cliente UNION select nombre from Empleado;
+
+/* UNION ALL, obtiene los duplicados (registros resultantes cuyos valores de las tuplas son iguales)*/
+select nombre from Cliente UNION ALL select nombre from Empleado;
+
+/* Ejemplos 02: inner join sin condición es equivalente a hacer el producto cartesiano*/
+select Receta.nombre, Receta.cantidadPorciones, Ingrediente.nombre from Receta, Ingrediente;
+select Receta.nombre, Receta.cantidadPorciones, Ingrediente.nombre from Receta inner join Ingrediente;
+
+/* Ejemplo 02: inner join con condición*/
+SELECT c.nombre, f.montoTotal FROM Cliente as c INNER JOIN Factura as f ON (f.idCliente = c.id)
+
+/* Ejemplo 03-1: Cliente LEFT JOIN (con la condición) implica traer todos los Clientes a pesar de que las Facturas no tengan un Cliente asociado */
+SELECT c.nombre, f.montoTotal, f.idCliente FROM Cliente as c LEFT JOIN Factura as f ON (c.id = f.idCliente)
+
+/* Ejemplo 03-1-1: Query equivalente a la 03-1 */
+SELECT c.nombre, f.montoTotal
+FROM Cliente as c INNER JOIN Factura as f
+     ON (f.idCliente = c.id)
+UNION ALL
+SELECT clienteSinRelacion.nombre, NULL
+FROM Cliente as clienteSinRelacion 
+WHERE clienteSinRelacion.id NOT IN (SELECT f.idCliente from Factura as f)
+
+/* Observaciones: Se usa 'ALL' para que los registros resultantes del segundo SELECT cuyos nombres estén duplicados no sean eliminados dado que tienen diferente apellido, si la query se hubiera escrito pidiendo el nombre y el apellido entonces el 'ALL' no hubiera sido necesario para este caso puntual.*/
+
+
+/* Ejemplo 03-2: Cliente RIGHT JOIN (con la condición) implica traer todos las Facturas a pesar de que los Clientes no tengan una Factura asociada, en este caso no hay Facturas que no tengan Clientes */
+SELECT c.nombre, f.montoTotal, f.idCliente FROM Cliente as c RIGHT JOIN Factura as f ON (c.id = f.idCliente)
+
+/* UNION y JOIN en inglés tienen significados muy similares: */
+
+/* Regla facil para distinguir ambos operadores: */
+/* UNION: Es para unir información del mismo tipo, "unir cosas iguales" */
+/* JOIN: Es para unir información de diferente tipo, "unir cosas diferentes (no necesariamente iguales)" */
+
+

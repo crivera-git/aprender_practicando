@@ -1,0 +1,56 @@
+/* EJEMPLOS DE SUB QUERIES EN EL WHERE USANDO EL OPERADOR IN: */
+
+/* Obtener todos los nombres de clientes con sus números de facturas y los montos totales de las mismas */
+/* Query Ejemplo 5.2.1: */
+SELECT c.nombre, f.numero, f.montoTotal FROM Cliente as c INNER JOIN Factura as f ON (c.id = f.idCliente) order by c.nombre
+
+/* Obtener los nombres y apellidos de clientes que tienen facturas: */
+/* Observación: Aqui se hace la consulta usando JOIN, se obtienen nombres y apellidos dupicados por que los registros resultantes contienen las facturas asociadas (pueden existir más de una factura por cliente), esto se debe al JOIN. ver Query Ejemplo 5.2.1 */
+SELECT c.nombre, c.apellido FROM Cliente as c INNER JOIN Factura as f ON (c.id = f.idCliente) order by c.nombre
+
+/* Obtener los nombres y apellidos de clientes que tienen facturas: */
+/* Observaciones: (a) Aqui se hace la consulta usando SUB QUERIES, no se obtienen nombres y apellidos dupicados por que se recorre cada registro de Cliente una sola vez, para cada uno de estos se consulta si su id existe en la tabla resultante de la sub query. 
+                  (b) Tanto en esta query como en la query anterior se está trabajando con 2 tablas, y son las mismas */
+/* Query Ejemplo 5.2.3: */
+SELECT c.nombre, c.apellido FROM Cliente as c WHERE c.id IN (SELECT f.idCliente FROM Factura as f) order by c.nombre
+
+
+/* EJEMPLOS DE SUB QUERIES EN EL WHERE USANDO EL OPERADOR "=": */
+
+/* Obtención de la última Factura ingresada en el sistema */
+SELECT * FROM Factura WHERE id = (SELECT max(id) FROM Factura);
+
+/* La siguiente query da error dado que la sub query devuelve más de un registro  */
+SELECT * FROM Factura WHERE id = (SELECT id FROM Factura WHERE id < 10);
+
+/* La siguiente query no da error dado que la sub query devuelve una tabla resultante vacía (el último id de factura es 24),   */
+SELECT * FROM Factura WHERE id = (SELECT id FROM Factura WHERE id > 30);
+
+
+/* EJEMPLOS DE SUB QUERIES EN EL WHERE USANDO EL OPERADOR "EXISTS": */
+
+/* Obtener los nombres y apellidos de clientes que tienen facturas (el mismo enunciado que para el ejemplo 5.2.3, esta vez se resuelve con EXISTS EN VEZ DE IN): */
+SELECT c.nombre, c.apellido FROM Cliente as c WHERE EXISTS (SELECT f.idCliente FROM Factura as f where f.idCliente = c.id) order by c.nombre
+
+/* Listar nombre y apellido de los empleados que tengan algún familiar en la empresa (el criterio para determinar si tiene familiar es que el apellido sea el mismo que el de otro empleado)*/
+/* Observaciones: (a) Esta query trae empleados que no tienen familiares dado que cuando se recorre e1 y se compara contra cada e2 sucede que el primer registro de "e1" es el mismo que el primer registro de "e2", ejemplo, se compara {nombre : "william", apellido : "Gonzalez" } contra {nombre : "william", apellido : "Gonzalez" } ambos tienen el mismo apellido, por lo tanto son parte del resultado 
+                  (b) El alias "e1" dentro de la Sub Query se lo define como referencia correlacionada */
+SELECT nombre , apellido from Empleado as e1 WHERE 
+EXISTS (SELECT * from Empleado as e2 WHERE e1.apellido = e2.apellido) order by apellido
+
+/* Listar nombre y apellido de los empleados que tengan algún familiar en la empresa (el criterio para determinar si tiene familiar es que el apellido sea el mismo que el de otro empleado)*/
+/* Observación: Esta query es similar a la anterior, se le agrega el (e1.id != e2.id) justamente para no comparar los mismos registros */
+SELECT nombre , apellido from Empleado as e1 WHERE 
+EXISTS (SELECT * from Empleado as e2 WHERE e1.apellido = e2.apellido and e1.id != e2.id)
+
+
+
+/* EJEMPLOS DE SUB QUERIES EN EL FROM: */
+
+/* Los alias son importantes y necesarios para distinguir los campos entre las diferentes sub consultas */
+SELECT nombreCliente, apellidoCliente FROM (SELECT c.nombre as nombreCliente,c.apellido as apellidoCliente FROM Cliente c WHERE c.nombre ='Pedro' ) as SubCliente
+
+/* También podría ser: */
+/* Observación: En la query principal se definen los campos a consultar usando el alias de la tabla resultante (SubCliente) y los alias de los campos resultantes nombreCliente y apellidoCliente*/
+SELECT SubCliente.nombreCliente, SubCliente.apellidoCliente FROM (SELECT c.nombre as nombreCliente,c.apellido as apellidoCliente FROM Cliente c WHERE c.nombre ='Pedro' ) as SubCliente
+

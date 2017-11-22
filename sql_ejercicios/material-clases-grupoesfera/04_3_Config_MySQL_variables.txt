@@ -1,0 +1,13 @@
+Para versiones de MySQL iguales o posteriores a la 5.7 tal vez sea necesario aplicar lo siguiente:
+
+	Para deshabilitar el uso del 'ONLY_FULL_GROUP_BY' ejecutar:
+
+		select @@sql_mode;
+
+
+	Se mostrarán los modos separados por coma, se deben seleccionar todos
+	excluyendo 'ONLY_FULL_GROUP_BY' para dejar habilitados el resto de los modos, por ejemplo:
+
+		SET sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';
+
+

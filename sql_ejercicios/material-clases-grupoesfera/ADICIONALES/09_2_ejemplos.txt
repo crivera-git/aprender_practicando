@@ -1,0 +1,55 @@
+Se verifica el estado de la variable global de MySQL que muestra si se está usando auto commit,
+
+	SHOW SESSION VARIABLES LIKE 'autocommit';
+
+En caso de que el auto commit sea ON se deshabilita,
+
+	SET autocommit=0;
+
+	START TRANSACTION;
+	SELECT @VARIABLE_ID_VEHICULO_ACCORD:=Vehiculo.id FROM Vehiculo WHERE Vehiculo.modelo='Accord';
+	SELECT @VARIABLE_ID_VEHICULO_COROLA:=Vehiculo.id FROM Vehiculo WHERE Vehiculo.modelo='Corola';
+	
+	/* Tambien se puede usar: SET @IVARIABLE_ID_VEHICULO_ACCORD = SELECT Vehiculo.id FROM Vehiculo WHERE Vehiculo.modelo='Accord';*/
+
+	UPDATE Persona SET idVehiculo=@VARIABLE_ID_VEHICULO_ACCORD WHERE Persona.id=3;
+	UPDATE Persona SET idVehiculo=@VARIABLE_ID_VEHICULO_COROLA WHERE Persona.id=2;
+	COMMIT;
+
+Para hacer un rollback se usa el comando "ROLLBACK".
+_____
+
+/* Se inserta el nuevo vehiculo y luego se actualizan las personas vinculadas a ese vehículo */
+
+	SET autocommit=0;
+	START TRANSACTION;
+
+	SET @ID_NUEVO_VEHICULO = (SELECT MAX(id) FROM Vehiculo) + 1;
+
+	/* INSERT usando @ID_NUEVO_VEHICULO, para este ejemplo se asume que el id en Vehiculo no es auto incremental */
+
+	UPDATE Persona SET idVehiculo=@ID_NUEVO_VEHICULO WHERE Persona.id=3;
+
+	COMMIT;
+
+/* Si se insertan varios vehiculos de forma concurrente sin usar transacciones entonces */
+/* se pueden producir inconsistencias, por ejmplo, el idVehiculo asignado a la persona 
+/* podría ser otro */
+
+_____
+
+Si el modo autocommit está activado entonces implica que cada sentencia
+es tratada como una transacción
+
+_____
+
+Se puede usar la sentencia ROLLBACK para cancelar las operaciones de una
+transacción a la que todavía no se le ejecutó el COMMIT;
+
+_____
+
+/* También se puede asignar una valor constante usando el SET, */
+/* permite evitar la duplicación de valores en los Scripts*/
+
+/* SET @ID_DE_PRODUCTO = 5; */
+

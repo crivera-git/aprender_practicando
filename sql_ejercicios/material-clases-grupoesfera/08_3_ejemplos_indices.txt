@@ -1,0 +1,116 @@
+/* Para el siguiente ejemplo si no existe un índice sobre el campo nombre entonces el explain indicará que no se hará uso de índices: */
+
+	explain select * from Cliente where nombre like 'r%';
+
+/* Para ver los índices de la tabla Cliente: */
+	
+	show index from Cliente;
+
+/* Para crear un índice sobre el campo nombre: */
+
+	create index indiceNombre on Cliente(nombre);
+
+/* Observar la diferencia entre usar 'r%' y '%r%' en un like, ver que en el primer caso usa un índice, pero en el segundo no: */
+
+	mysql> explain select * from Cliente where nombre like 'r%';
+	+----+-------------+---------+-------+---------------+--------------+---------+------+------+-------------+
+	| id | select_type | table   | type  | possible_keys | key          | key_len | ref  | rows | Extra       |
+	+----+-------------+---------+-------+---------------+--------------+---------+------+------+-------------+
+	|  1 | SIMPLE      | Cliente | range | indiceNombre  | indiceNombre | 52      | NULL |    6 | Using where |
+	+----+-------------+---------+-------+---------------+--------------+---------+------+------+-------------+
+	1 row in set (0.00 sec)
+
+	mysql> explain select * from Cliente where nombre like '%r%';
+	+----+-------------+---------+------+---------------+------+---------+------+------+-------------+
+	| id | select_type | table   | type | possible_keys | key  | key_len | ref  | rows | Extra       |
+	+----+-------------+---------+------+---------------+------+---------+------+------+-------------+
+	|  1 | SIMPLE      | Cliente | ALL  | NULL          | NULL | NULL    | NULL |   37 | Using where |
+	+----+-------------+---------+------+---------------+------+---------+------+------+-------------+
+
+
+/* type = "range" en el primer caso indica que usará el índice para llegar hasta el primer nombre que comience con 'r' y luego se hará un recorrido secuencial para obtener el resto de los nombres (range = rango)*/
+
+/* type = "ALL" en el segundo caso indica que hará un recorrido completo (FULL SCAN)*/
+
+
+/* En el siguiente ejemplo el explain muestra que se usará el índice, el type = "ref" indica que todos los accesos hacia los datos se harán usando el índice */
+
+	mysql> explain select nombre from Cliente where nombre = 'Pedro';
+	+----+-------------+---------+------+---------------+--------------+---------+-------+------+--------------------------+
+	| id | select_type | table   | type | possible_keys | key          | key_len | ref   | rows | Extra                    |
+	+----+-------------+---------+------+---------------+--------------+---------+-------+------+--------------------------+
+	|  1 | SIMPLE      | Cliente | ref  | indiceNombre  | indiceNombre | 52      | const |    2 | Using where; Using index |
+	+----+-------------+---------+------+---------------+--------------+---------+-------+------+--------------------------+
+	1 row in set (0.00 sec)
+
+	mysql> explain select nombre from Cliente where nombre > 'Pedro';
+	+----+-------------+---------+-------+---------------+--------------+---------+------+------+--------------------------+
+	| id | select_type | table   | type  | possible_keys | key          | key_len | ref  | rows | Extra                    |
+	+----+-------------+---------+-------+---------------+--------------+---------+------+------+--------------------------+
+	|  1 | SIMPLE      | Cliente | range | indiceNombre  | indiceNombre | 52      | NULL |   15 | Using where; Using index |
+	+----+-------------+---------+-------+---------------+--------------+---------+------+------+--------------------------+
+
+
+
+
+/* Observar que en el siguiente explain se puede ver que no usa índice para recorrer f.idCliente */
+
+	mysql> explain SELECT c.nombre, c.apellido FROM Cliente as c WHERE EXISTS (SELECT f.idCliente FROM Factura as f where f.idCliente = c.id);
+	+----+--------------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+	| id | select_type        | table | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
+	+----+--------------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+	|  1 | PRIMARY            | c     | NULL       | ALL  | NULL          | NULL | NULL    | NULL |   37 |   100.00 | Using where |
+	|  2 | DEPENDENT SUBQUERY | f     | NULL       | ALL  | NULL          | NULL | NULL    | NULL |   24 |    10.00 | Using where |
+	+----+--------------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+
+/* Se verifican los índices existentes en la tabla Factura */
+
+	mysql> show index from Factura;
+	+---------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+	| Table   | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment |
+	+---------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+	| Factura |          0 | PRIMARY  |            1 | id          | A         |          24 |     NULL | NULL   |      | BTREE      |         |               |
+	+---------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+
+
+/* Al agregar un índice sobre Factura.idCliente el explain indica que será usado el índice 'indiceIdCliente' */
+
+	mysql> create index indiceIdCliente on Factura(idCliente);
+
+	mysql> explain SELECT c.nombre, c.apellido FROM Cliente as c WHERE EXISTS (SELECT f.idCliente FROM Factura as f where f.idCliente = c.id);
+	+----+--------------------+-------+------------+------+-----------------+-----------------+---------+----------------+------+----------+-------------+
+	| id | select_type        | table | partitions | type | possible_keys   | key             | key_len | ref            | rows | filtered | Extra       |
+	+----+--------------------+-------+------------+------+-----------------+-----------------+---------+----------------+------+----------+-------------+
+	|  1 | PRIMARY            | c     | NULL       | ALL  | NULL            | NULL            | NULL    | NULL           |   37 |   100.00 | Using where |
+	|  2 | DEPENDENT SUBQUERY | f     | NULL       | ref  | indiceIdCliente | indiceIdCliente | 5       | AlarmaSys.c.id |    3 |   100.00 | Using index |
+	+----+--------------------+-------+------------+------+-----------------+-----------------+---------+----------------+------+----------+-------------+
+
+
+/* Tipos de índices según el tipo de tabla en MySQL: */
+
+	Storage Engine	Permissible Index Types
+	InnoDB		BTREE
+	MyISAM		BTREE
+	MEMORY/HEAP	HASH, BTREE
+
+
+/* Para visualizar los tipos de motor para una tabla: */
+
+	SHOW engines;
+
+
+/* Creación de un índice definiendo el tipo */
+
+	CREATE INDEX indiceNombre on Cliente(nombre);	
+
+	CREATE INDEX indiceApellido USING BTREE ON Cliente(apellido); 
+
+/* Los índices de tipo BTREE se pueden usar para condiciones de búsqueda que tienen el "=", el ">" o "<" */
+
+
+/* Tener en cuenta que los índices de tipo HASH solo se pueden usar para condiciones de búsqueda que tienen el "=", no se puede usar para ">" o "<" */
+
+	CREATE TABLE Rubros (id INT) ENGINE = MEMORY;
+
+	CREATE INDEX indiceId USING HASH ON Rubros (id);
+

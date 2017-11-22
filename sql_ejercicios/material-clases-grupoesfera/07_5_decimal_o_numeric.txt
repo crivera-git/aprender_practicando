@@ -1,0 +1,17 @@
+EN MySQL:
+=========
+
+Extraído de la documentación:
+_____________________________
+
+
+Los tipos DECIMAL y NUMERIC se implementan como el mismo tipo en MySQL. Se usan para guardar
+valores para los que es importante preservar una precisión exacta, por ejemplo con datos monetarios.
+Cuando se declara una columna de alguno de estos tipos, la precisión y la escala puede especificarse (y
+usualmente se hace), por ejemplo:
+
+	salary DECIMAL(5,2)
+
+En este ejemplo, 5 es la precisión y 2 es la escala. La precisión representa el número de dígitos decimales
+significativos que se almacenan para los valores, y la escala representa el número de dígitos que pueden
+almacenarse a continuación del punto decimal.

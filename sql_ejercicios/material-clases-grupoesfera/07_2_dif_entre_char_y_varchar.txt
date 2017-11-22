@@ -1,0 +1,25 @@
+EN MySQL:
+=========
+
+Extraído de la documentación:
+_____________________________
+
+
+Los tipos CHAR y VARCHAR son similares, pero difieren en cómo se almacenan y recuperan. 
+Desde MySQL 5.0.3, también difieren en la longitud máxima y en cómo se tratan los espacios finales.
+
+Los tipos CHAR y VARCHAR se declaran con una longitud que indica el máximo número de caracteres que
+quiere almacenar. Por ejemplo, CHAR(30) puede almacenar hasta 30 caracteres.
+
+La longitud de una columna CHAR se fija a la longitud que se declara al crear la tabla. La longitud puede
+ser cualquier valor de 0 a 255. Cuando los valores CHAR se almacenan, se añaden espacios a la derecha
+hasta las longitud específica. Cuando los valores CHAR se recuperan, estos espacios se borran.
+
+Los valores en columnas VARCHAR son cadenas de caracteres de longitud variable. En MySQL 5.0, la
+longitud puede especficarse de 0 a 255 antes de MySQL 5.0.3, y de 0 a 65,535 en 5.0.3 y versiones
+posteriores. (La máxima longitud efectiva de un VARCHAR en MySQL 5.0 se determina por el tamaño de
+registro máximo y el conjunto de caracteres usados. La longitud máxima total es de 65,532 bytes.)
+
+En contraste con CHAR, VARCHAR almacena los valores usando sólo los caracteres necesarios, más un
+byte adicional para la longitud (dos bytes para columnas que se declaran con una longitud superior a 255).
+

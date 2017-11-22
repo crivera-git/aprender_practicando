@@ -1,0 +1,60 @@
+/* Agrupa (crea un grupo para idJefe ), en este ejemplo se piden todos los campos solo para */
+/* simplificar la query y para mostrar lo que hace el group by, pero no tiene mucho sentido pedir */
+/* todos los campos dado que para cada grupo solo se seleccionan los primeros valores encontrados */
+select * from Empleado group by idJefe; 
+
+/* La cuota del grupo de idJefe = 13 es 10000, este valor no tiene sentido*/
+select cuota, count(*), idJefe from Empleado group by idJefe; 
+
+/* La suma de todas las cuotas tiene sentido */
+select sum(cuota), count(*), idJefe from Empleado group by idJefe;
+
+/* Al cambiar el count(*) por count(idJefe) devuelve la cantidad de valores distintos de NULL */
+select sum(cuota), count(idJefe), idJefe from Empleado group by idJefe; 
+
+/* El máximo de todas las cuotas también tiene sentido */
+select max(cuota), count(*), idJefe from Empleado group by idJefe; 
+
+
+/* Recordar que en el Select primero se aplica el filtro 'where' y luego el 'having by' */
+
+/* En este caso la cantidad de empleados para el idJefe = 6 disminuye en uno dado que se está eliminando a 'Elizalde' */
+/* La cantidad de grupos sigue siendo la misma y por ende la cantidad de registros finales de la query completa */
+select sum(Empleado.cuota) as 'Suma total de todas las cuotas' , count(*) as 'Cantidad de empleados por jefe', idjefe
+from Empleado 
+where Empleado.Apellido != 'Elizalde' 
+group by idjefe
+
+/* Ahora se usa el 'having' para filtrar los Grupos, la cantidad de grupos va a ser menor */
+select sum(Empleado.cuota) as 'Suma total de todas las cuotas' , count(*) as 'Cantidad de empleados por jefe', idjefe
+from Empleado 
+group by idjefe
+having idjefe = 14 
+
+/* En este caso se filtra el grupo usando una condición sobre uno de los campos resultantes del Group By */
+/* Q4_11: */
+select sum(Empleado.cuota) as 'Suma total de todas las cuotas' , count(*) as 'Cantidad de empleados por jefe', idjefe
+from Empleado 
+group by idjefe
+having sum(Empleado.cuota) > 35000 
+
+/* La siguiente query es igual a la Q4_11, en este caso se usa un alias para indicarle al having (suma_total) la variable para filtrar */
+select sum(Empleado.cuota) as suma_total , count(*) as 'Cantidad de empleados por jefe', idjefe
+from Empleado 
+group by idjefe
+having suma_total > 35000
+
+
+/* El group by X,Y (group by de multiples valores) devuelve las tuplas que tengan el mismo valor tanto para X como para Y en un mismo grupo */
+/* Observar que tanto para el idJefe = null, hay un grupo de 10000 y otro grupo de 12000 */
+select * from Empleado group by idJefe,cuota; 
+
+select idJefe,cuota,count(*) from Empleado group by idJefe,cuota; 
+
+/* (1) El HAVING filtra los grupos (al tener los grupos armados el HAVING define el criterio que deben cumplir los grupos) */
+/* (2) Mientras que el WHERE va a filtrar la información que va a ser tomada por el GROUP BY (Los registros que no cumplen */
+/*     las condiciones del WHERE no se consideran en las operaciones de agrupamiento) */
+select sum(cuota), count(*), idJefe from Empleado where idSucursal = 5 group by idJefe HAVING idJefe = 6 OR idJefe = 13;
+
+
+

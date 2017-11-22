@@ -1,0 +1,11 @@
+URL de conexión para el ALIAS: jdbc:mysql://localhost:3306/
+
+
+Para ver loas alias de las columnas en la tabla resultante:
+
+	File > Global Preferences > Data Type Controls > tildar el Check "Use column labels instead of column names in result headers"
+
+
+Para incrementar el tamaño del Font de la ventana de las queries:
+
+	File -> New Session Properties -> SQL (tab) -> SQL Entry Area -> Font (Button)
